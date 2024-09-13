@@ -30,8 +30,9 @@ jobs:
             (async () => { \
               const browser = await puppeteer.launch(); \
               const page = await browser.newPage(); \
+              await page.setViewport({ width: 1920, height: 1080 }); /* Ajusta el tamaño de la ventana */ \
               await page.goto('https://es.lipsum.com'); \
-              await page.screenshot({ path: 'screenshot.png' }); \
+              await page.screenshot({ path: 'screenshot.png', fullPage: true }); /* Captura de pantalla completa */ \
               await browser.close(); \
             })();"
 
