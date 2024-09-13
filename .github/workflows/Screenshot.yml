@@ -1,0 +1,42 @@
+name: Captura de Pantalla Automática
+
+on:
+  push:
+    branches:
+      - main  # Se ejecuta al hacer push a la rama main
+  workflow_dispatch: # También puedes ejecutarlo manualmente
+
+jobs:
+  capture_screenshot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Usa la versión que necesites de Node.js
+
+      - name: Install Puppeteer
+        run: |
+          npm init -y
+          npm install puppeteer
+
+      - name: Capture screenshot
+        run: |
+          node -e "const puppeteer = require('puppeteer'); \
+            (async () => { \
+              const browser = await puppeteer.launch(); \
+              const page = await browser.newPage(); \
+              await page.goto('https://es.lipsum.com'); \
+              await page.screenshot({ path: 'screenshot.png' }); \
+              await browser.close(); \
+            })();"
+
+      - name: Upload screenshot as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshot
+          path: screenshot.png
